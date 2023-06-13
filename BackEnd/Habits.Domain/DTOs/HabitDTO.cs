@@ -1,6 +1,6 @@
-﻿namespace Habits.Domain.Models
+﻿namespace Habits.Domain.DTOs
 {
-    public class Habit
+    public class HabitDTO
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
