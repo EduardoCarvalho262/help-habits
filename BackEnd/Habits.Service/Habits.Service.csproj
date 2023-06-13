@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Habits.Domain\Habits.Domain.csproj" />
+  </ItemGroup>
+
 </Project>

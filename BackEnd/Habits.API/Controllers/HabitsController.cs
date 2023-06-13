@@ -1,4 +1,5 @@
 ﻿using Habits.Domain.Models;
+using Habits.Service.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,6 +9,11 @@ namespace Habits.API.Controllers
     [ApiController]
     public class HabitsController : ControllerBase
     {
+        private readonly IHabitService _habitService;
+        public HabitsController(IHabitService habitService)
+        {
+            _habitService = habitService;
+        }
 
         //TODO - Obter todos os habitos
         [HttpGet("habits")]
