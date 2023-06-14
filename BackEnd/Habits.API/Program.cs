@@ -2,6 +2,8 @@ using Habits.Infra.Interfaces;
 using Habits.Infra.Repositories;
 using Habits.Service.Interfaces;
 using Habits.Service.Services;
+using Microsoft.Azure.Cosmos;
+using System.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +15,10 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddTransient<IHabitService, HabitService>();
 builder.Services.AddScoped(typeof(IRepository<>), typeof(CosmosDbRepository<>));
+
+var cosmosDbConfig = Configuration.GetSection("ConnectionStrings:CosmosDbConnection");
+builder.Services.AddSingleton((provider) => new CosmosClient(cosmosDbConfig["AccountEndpoint"], cosmosDbConfig["AccountKey"]));
+
 
 var app = builder.Build();
 
