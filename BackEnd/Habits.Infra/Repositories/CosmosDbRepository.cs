@@ -9,24 +9,28 @@ namespace Habits.Infra.Repositories
     {
         private readonly Container _container;
 
-        public CosmosDbRepository(string connectionString, string databaseName, string containerName)
+        public CosmosDbRepository()
         {
-            var cosmosClient = new CosmosClient(connectionString);
-            var database = cosmosClient.GetDatabase(databaseName);
-            _container = database.GetContainer(containerName);
+            var cosmosClient = new CosmosClient("AccountEndpoint=https://localhost:8081/;AccountKey=C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==");
+            var database = cosmosClient.GetDatabase("HelpHabits");
+            _container = database.GetContainer("Habits");
         }
 
         public async Task<IEnumerable<T>> GetAllAsync()
         {
-            var query = _container.GetItemQueryIterator<T>(new QueryDefinition("SELECT * FROM c"));
+            var query = new QueryDefinition("SELECT * FROM c");
+            var iterator = _container.GetItemQueryIterator<T>(query);
             var results = new List<T>();
-            while (query.HasMoreResults)
+
+            while (iterator.HasMoreResults)
             {
-                var response = await query.ReadNextAsync();
+                var response = await iterator.ReadNextAsync();
                 results.AddRange(response.ToList());
             }
+
             return results;
         }
+
 
         public async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate)
         {

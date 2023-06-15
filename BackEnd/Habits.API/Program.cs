@@ -16,9 +16,6 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddTransient<IHabitService, HabitService>();
 builder.Services.AddScoped(typeof(IRepository<>), typeof(CosmosDbRepository<>));
 
-var cosmosDbConfig = Configuration.GetSection("ConnectionStrings:CosmosDbConnection");
-builder.Services.AddSingleton((provider) => new CosmosClient(cosmosDbConfig["AccountEndpoint"], cosmosDbConfig["AccountKey"]));
-
 
 var app = builder.Build();
 

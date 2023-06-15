@@ -17,9 +17,10 @@ namespace Habits.API.Controllers
 
         //TODO - Obter todos os habitos
         [HttpGet("habits")]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
-            return Ok(new Habit { Id = Guid.NewGuid(), Name = "Estudar inglês"});
+            var response = await _habitService.GetAllHabits();
+            return Ok(response);
         }
 
         //TODO - Obter 1 hábito

@@ -26,9 +26,10 @@ namespace Habits.Service.Services
             throw new NotImplementedException();
         }
 
-        public Task<HabitResponse> GetAllHabits()
+        public async Task<IEnumerable<Habit>> GetAllHabits()
         {
-            throw new NotImplementedException();
+             var response =  await _repository.GetAllAsync();
+            return response;
         }
 
         public Task<HabitResponse> GetHabitById(Guid id)
