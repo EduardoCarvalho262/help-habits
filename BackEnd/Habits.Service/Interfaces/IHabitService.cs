@@ -8,9 +8,9 @@ namespace Habits.Service.Interfaces
     public interface IHabitService
     {
         public Task<IEnumerable<Habit>> GetAllHabits();
-        public Task<HabitResponse> GetHabitById(Guid id);
-        public Task<HabitResponse> AddHabit(HabitDTO newHabit);
-        public Task<HabitResponse> UpgradeHabit(HabitDTO upgradedHabit);
-        public Task<HabitResponse> DeleteHabit(Guid id);
+        public Task<Habit> GetHabitByCategory(string category);
+        public Task<Habit> AddHabit(HabitDTO newHabit);
+        public Task<Habit> UpgradeHabit(HabitDTO upgradedHabit);
+        public Task<Habit> DeleteHabit(string id);
     }
 }

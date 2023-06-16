@@ -1,4 +1,5 @@
-﻿using System.Linq.Expressions;
+﻿using Microsoft.Azure.Cosmos;
+using System.Linq.Expressions;
 
 namespace Habits.Infra.Interfaces
 {
@@ -6,9 +7,9 @@ namespace Habits.Infra.Interfaces
     {
         Task<IEnumerable<T>> GetAllAsync();
         Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate);
-        Task<T> GetByIdAsync(string id);
-        Task AddAsync(T entity);
-        Task UpdateAsync(T entity);
-        Task DeleteAsync(string id);
+        Task<T> GetByCategoryAsync(string id);
+        Task<ItemResponse<T>> AddAsync(T entity);
+        Task<ItemResponse<T>> UpdateAsync(T entity);
+        Task<ItemResponse<T>> DeleteAsync(string id);
     }
 }

@@ -1,6 +1,5 @@
 ﻿using Habits.Domain.Models;
 using Habits.Service.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Habits.API.Controllers
@@ -25,7 +24,7 @@ namespace Habits.API.Controllers
 
         //TODO - Obter 1 hábito
         [HttpGet("habit")]
-        public IActionResult GetById()
+        public IActionResult GetByCategory()
         {
             return Ok(new Habit { Id = Guid.NewGuid(), Name = "Estudar inglês" });
         }

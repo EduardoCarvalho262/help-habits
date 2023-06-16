@@ -47,7 +47,7 @@ namespace Habits.Infra.Repositories
             return results;
         }
 
-        public async Task<T> GetByIdAsync(string id)
+        public async Task<T> GetByCategoryAsync(string id)
         {
             try
             {
@@ -60,19 +60,19 @@ namespace Habits.Infra.Repositories
             }
         }
 
-        public async Task AddAsync(T entity)
+        public async Task<ItemResponse<T>> AddAsync(T entity)
         {
-            await _container.CreateItemAsync(entity);
+            return await _container.CreateItemAsync(entity);
         }
 
-        public async Task UpdateAsync(T entity)
+        public async Task<ItemResponse<T>> UpdateAsync(T entity)
         {
-            await _container.UpsertItemAsync(entity);
+            return await _container.UpsertItemAsync(entity);
         }
 
-        public async Task DeleteAsync(string id)
+        public async Task<ItemResponse<T>> DeleteAsync(string id)
         {
-            await _container.DeleteItemAsync<T>(id, new PartitionKey(id));
+            return await _container.DeleteItemAsync<T>(id, new PartitionKey(id));
         }
     }
 }

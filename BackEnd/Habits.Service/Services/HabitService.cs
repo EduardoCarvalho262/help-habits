@@ -1,9 +1,7 @@
 ﻿using Habits.Domain.DTOs;
 using Habits.Domain.Models;
-using Habits.Domain.Responses;
 using Habits.Infra.Interfaces;
 using Habits.Service.Interfaces;
-using System.Xml;
 
 namespace Habits.Service.Services
 {
@@ -16,14 +14,17 @@ namespace Habits.Service.Services
             _repository = repository;
         }
 
-        public Task<HabitResponse> AddHabit(HabitDTO newHabit)
+        public async Task<Habit> AddHabit(HabitDTO newHabit)
         {
-            throw new NotImplementedException();
+            //TODO - Utitlizar AutoMapper
+            var response = await _repository.AddAsync(new Habit());
+            return response;
         }
 
-        public Task<HabitResponse> DeleteHabit(Guid id)
+        public async Task<Habit> DeleteHabit(string id)
         {
-            throw new NotImplementedException();
+            var response = await _repository.DeleteAsync(id);
+            return response;
         }
 
         public async Task<IEnumerable<Habit>> GetAllHabits()
@@ -32,14 +33,17 @@ namespace Habits.Service.Services
             return response;
         }
 
-        public Task<HabitResponse> GetHabitById(Guid id)
+        public async Task<Habit> GetHabitByCategory(string category)
         {
-            throw new NotImplementedException();
+            var response = await _repository.GetByCategoryAsync(category);
+            return response;
         }
 
-        public Task<HabitResponse> UpgradeHabit(HabitDTO upgradedHabit)
+        public async Task<Habit> UpgradeHabit(HabitDTO upgradedHabit)
         {
-            throw new NotImplementedException();
+            //TODO - AutoMapper 
+            var response = await _repository.UpdateAsync(new Habit());
+            return response;
         }
     }
 }
