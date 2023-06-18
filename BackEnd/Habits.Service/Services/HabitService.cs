@@ -1,4 +1,5 @@
-﻿using Habits.Domain.DTOs;
+﻿using AutoMapper;
+using Habits.Domain.DTOs;
 using Habits.Domain.Models;
 using Habits.Domain.Responses;
 using Habits.Infra.Interfaces;
@@ -9,19 +10,21 @@ namespace Habits.Service.Services
     public class HabitService : IHabitService
     {
         private readonly IRepository<Habit> _repository;
-
-        public HabitService(IRepository<Habit> repository)
+        private readonly IMapper _mapper;
+        public HabitService(IRepository<Habit> repository, IMapper mapper)
         {
             _repository = repository;
+            _mapper = mapper;
         }
 
         public async Task<HabitResponse> AddHabit(HabitDTO newHabit)
         {
             try
             {
-                //TODO - Utitlizar AutoMapper
-                var response = await _repository.AddAsync(new Habit());
-                return new HabitResponse { Message = response.StatusCode.ToString()};
+                var teste = _mapper.Map<Habit>(newHabit);
+                var response = await _repository.AddAsync(teste);
+                var result = _mapper.Map<HabitDTO>(response.Resource);
+                return new HabitResponse { Message = response.StatusCode.ToString(), response = new List<HabitDTO> { result } };
             }
             catch (Exception ex)
             {
@@ -48,7 +51,8 @@ namespace Habits.Service.Services
             try
             {
                 var response = await _repository.GetAllAsync();
-                return new HabitResponse { Message = "Ok"};
+                var result = _mapper.Map<List<HabitDTO>>(response.ToList());
+                return new HabitResponse { Message = "Ok", response = result};
             }
             catch (Exception ex)
             {

@@ -1,3 +1,4 @@
+using Habits.Domain.Profiles;
 using Habits.Infra.Interfaces;
 using Habits.Infra.Repositories;
 using Habits.Service.Interfaces;
@@ -15,6 +16,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddTransient<IHabitService, HabitService>();
 builder.Services.AddScoped(typeof(IRepository<>), typeof(CosmosDbRepository<>));
+builder.Services.AddAutoMapper(typeof(HabitProfile));
 
 
 var app = builder.Build();
