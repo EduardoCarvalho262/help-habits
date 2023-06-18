@@ -19,38 +19,54 @@ namespace Habits.API.Controllers
         public async Task<IActionResult> Get()
         {
             var response = await _habitService.GetAllHabits();
+
+            if(response.Message.Contains("Erro"))
+                return BadRequest(response);
+
             return Ok(response);
         }
 
-        //TODO - Obter 1 hábito
-        [HttpGet("habit")]
+        [HttpGet("habit/{category}")]
         public async Task<IActionResult> GetByCategory(string category)
         {
             var response =  await _habitService.GetHabitByCategory(category);
+
+            if (response.Message.Contains("Erro"))
+                return BadRequest(response);
+
             return Ok(response);
         }
 
-        //TODO - Atualizar Hábito
         [HttpPut("habit")]
         public async Task<IActionResult> Put(HabitDTO upgradedHabit)
         {
             var response = await _habitService.UpgradeHabit(upgradedHabit);
+
+            if (response.Message.Contains("Erro"))
+                return BadRequest(response);
+
             return Ok(response);
         }
 
-        //TODO - Criar hábito
         [HttpPost("habit")]
         public async Task<IActionResult> Post(HabitDTO newHabit)
         {
             var response = await _habitService.AddHabit(newHabit);
+
+            if (response.Message.Contains("Erro"))
+                return BadRequest(response);
+
             return Ok(response);
         }
 
-        //TODO - Deletar hábito
-        [HttpDelete("habit")]
+        [HttpDelete("habit/{id}")]
         public async Task<IActionResult> Delete(string id)
         {
             var response = await _habitService.DeleteHabit(id);
+
+            if (response.Message.Contains("Erro"))
+                return BadRequest(response);
+
             return Ok(response);
         }
     }

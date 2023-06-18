@@ -1,5 +1,6 @@
 ﻿using Habits.Domain.DTOs;
 using Habits.Domain.Models;
+using Habits.Domain.Responses;
 using Habits.Infra.Interfaces;
 using Habits.Service.Interfaces;
 
@@ -14,36 +15,73 @@ namespace Habits.Service.Services
             _repository = repository;
         }
 
-        public async Task<Habit> AddHabit(HabitDTO newHabit)
+        public async Task<HabitResponse> AddHabit(HabitDTO newHabit)
         {
-            //TODO - Utitlizar AutoMapper
-            var response = await _repository.AddAsync(new Habit());
-            return response;
+            try
+            {
+                //TODO - Utitlizar AutoMapper
+                var response = await _repository.AddAsync(new Habit());
+                return new HabitResponse { Message = response.StatusCode.ToString()};
+            }
+            catch (Exception ex)
+            {
+                return new HabitResponse { Message = $"Erro: {ex.Message}" };
+            }
+            
         }
 
-        public async Task<Habit> DeleteHabit(string id)
+        public async Task<HabitResponse> DeleteHabit(string id)
         {
-            var response = await _repository.DeleteAsync(id);
-            return response;
+            try
+            {
+                var response = await _repository.DeleteAsync(id);
+                return new HabitResponse { Message = response.StatusCode.ToString() };
+            }
+            catch (Exception ex)
+            {
+                return new HabitResponse { Message = $"Erro: {ex.Message}" };
+            }
         }
 
-        public async Task<IEnumerable<Habit>> GetAllHabits()
+        public async Task<HabitResponse> GetAllHabits()
         {
-             var response =  await _repository.GetAllAsync();
-            return response;
+            try
+            {
+                var response = await _repository.GetAllAsync();
+                return new HabitResponse { Message = "Ok"};
+            }
+            catch (Exception ex)
+            {
+                return new HabitResponse { Message = $"Erro: {ex.Message}" };
+            }
         }
 
-        public async Task<Habit> GetHabitByCategory(string category)
+        public async Task<HabitResponse> GetHabitByCategory(string category)
         {
-            var response = await _repository.GetByCategoryAsync(category);
-            return response;
+            try
+            {
+                var response = await _repository.GetByCategoryAsync(category);
+                return new HabitResponse { Message = "Ok" };
+            }
+            catch (Exception ex)
+            {
+                return new HabitResponse { Message = $"Erro: {ex.Message}" };
+            }
+
         }
 
-        public async Task<Habit> UpgradeHabit(HabitDTO upgradedHabit)
+        public async Task<HabitResponse> UpgradeHabit(HabitDTO upgradedHabit)
         {
-            //TODO - AutoMapper 
-            var response = await _repository.UpdateAsync(new Habit());
-            return response;
+            try
+            {
+                var response = await _repository.UpdateAsync(new Habit());
+                return new HabitResponse { Message = "Ok" };
+            }
+            catch (Exception ex)
+            {
+                return new HabitResponse { Message = $"Erro: {ex.Message}" };
+            }
+
         }
     }
 }

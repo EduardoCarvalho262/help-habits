@@ -56,7 +56,7 @@ namespace Habits.Infra.Repositories
             }
             catch (CosmosException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
             {
-                return null;
+                throw;
             }
         }
 
