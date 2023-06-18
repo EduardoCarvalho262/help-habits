@@ -10,6 +10,7 @@ namespace Habits.Domain.Models
         public string Description { get; set; }
         public bool IsClosed { get; set; }
         public string Objective { get; set; }
+        [JsonProperty(PropertyName = "category")]
         public string Category { get; set; }
     }
 }

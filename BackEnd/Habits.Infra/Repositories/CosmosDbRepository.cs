@@ -1,7 +1,9 @@
-﻿using Habits.Infra.Interfaces;
+﻿using Habits.Domain.Models;
+using Habits.Infra.Interfaces;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Azure.Cosmos.Linq;
 using System.Linq.Expressions;
+using System.Net;
 
 namespace Habits.Infra.Repositories
 {
@@ -46,15 +48,33 @@ namespace Habits.Infra.Repositories
             }
             return results;
         }
-
-        public async Task<T> GetByCategoryAsync(string id)
+        public async Task<T> GetByIdAsync(string id)
         {
             try
             {
-                var response = await _container.ReadItemAsync<T>(id, new PartitionKey(id));
-                return response.Resource;
+                var parameter = Expression.Parameter(typeof(T), "item");
+                var property = Expression.Property(parameter, "Id");
+                var idGuid = Guid.Parse(id);
+                var equals = Expression.Equal(property, Expression.Constant(idGuid));
+                var lambda = Expression.Lambda<Func<T, bool>>(equals, parameter);
+
+                var query = _container.GetItemLinqQueryable<T>()
+                    .Where(lambda)
+                    .ToFeedIterator();
+
+                if (query.HasMoreResults)
+                {
+                    var response = await query.ReadNextAsync();
+                    return response.FirstOrDefault();
+                }
+
+                return default(T); // Ou lance uma exceção adequada caso necessário
             }
             catch (CosmosException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                throw;
+            }
+            catch (FormatException  ex)
             {
                 throw;
             }
@@ -70,9 +90,18 @@ namespace Habits.Infra.Repositories
             return await _container.UpsertItemAsync(entity);
         }
 
-        public async Task<ItemResponse<T>> DeleteAsync(string id)
+        public async Task<ItemResponse<T>> DeleteAsync(string id, string category)
         {
-            return await _container.DeleteItemAsync<T>(id, new PartitionKey(id));
+            var response = await _container.ReadItemAsync<T>(id, new PartitionKey(category));
+
+            if (response.StatusCode == HttpStatusCode.NotFound)
+            {
+                // O item não existe, faça o tratamento apropriado
+                // por exemplo, lançar uma exceção ou retornar uma resposta adequada
+            }
+
+            return await _container.DeleteItemAsync<T>(id, new PartitionKey(category));
         }
+
     }
 }

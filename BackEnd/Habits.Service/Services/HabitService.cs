@@ -33,11 +33,11 @@ namespace Habits.Service.Services
             
         }
 
-        public async Task<HabitResponse> DeleteHabit(string id)
+        public async Task<HabitResponse> DeleteHabit(string id, string category)
         {
             try
             {
-                var response = await _repository.DeleteAsync(id);
+                var response = await _repository.DeleteAsync(id,category);
                 return new HabitResponse { Message = response.StatusCode.ToString() };
             }
             catch (Exception ex)
@@ -64,8 +64,9 @@ namespace Habits.Service.Services
         {
             try
             {
-                var response = await _repository.GetByCategoryAsync(category);
-                return new HabitResponse { Message = "Ok" };
+                var response = await _repository.GetByIdAsync(category);
+                var result = new List<HabitDTO> { _mapper.Map<HabitDTO>(response) };
+                return new HabitResponse { Message = "Ok", response = result };
             }
             catch (Exception ex)
             {
@@ -78,8 +79,10 @@ namespace Habits.Service.Services
         {
             try
             {
-                var response = await _repository.UpdateAsync(new Habit());
-                return new HabitResponse { Message = "Ok" };
+                var teste = _mapper.Map<Habit>(upgradedHabit);
+                var response = await _repository.UpdateAsync(teste);
+                var result = _mapper.Map<HabitDTO>(response.Resource);
+                return new HabitResponse { Message = response.StatusCode.ToString(), response = new List<HabitDTO> { result } };
             }
             catch (Exception ex)
             {

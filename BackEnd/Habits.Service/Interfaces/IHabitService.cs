@@ -9,6 +9,6 @@ namespace Habits.Service.Interfaces
         public Task<HabitResponse> GetHabitByCategory(string category);
         public Task<HabitResponse> AddHabit(HabitDTO newHabit);
         public Task<HabitResponse> UpgradeHabit(HabitDTO upgradedHabit);
-        public Task<HabitResponse> DeleteHabit(string id);
+        public Task<HabitResponse> DeleteHabit(string id, string category);
     }
 }

@@ -59,10 +59,10 @@ namespace Habits.API.Controllers
             return Ok(response);
         }
 
-        [HttpDelete("habit/{id}")]
-        public async Task<IActionResult> Delete(string id)
+        [HttpDelete("habit/{id}/{category}")]
+        public async Task<IActionResult> Delete(string id, string category)
         {
-            var response = await _habitService.DeleteHabit(id);
+            var response = await _habitService.DeleteHabit(id, category);
 
             if (response.Message.Contains("Erro"))
                 return BadRequest(response);

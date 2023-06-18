@@ -11,4 +11,8 @@
     <PackageReference Include="Microsoft.Azure.Cosmos" Version="3.34.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Habits.Domain\Habits.Domain.csproj" />
+  </ItemGroup>
+
 </Project>
