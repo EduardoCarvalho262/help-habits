@@ -1,4 +1,5 @@
-﻿using Habits.Domain.Models;
+﻿using Habits.Domain.DTOs;
+using Habits.Domain.Models;
 using Habits.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,7 +15,6 @@ namespace Habits.API.Controllers
             _habitService = habitService;
         }
 
-        //TODO - Obter todos os habitos
         [HttpGet("habits")]
         public async Task<IActionResult> Get()
         {
@@ -24,30 +24,34 @@ namespace Habits.API.Controllers
 
         //TODO - Obter 1 hábito
         [HttpGet("habit")]
-        public IActionResult GetByCategory()
+        public async Task<IActionResult> GetByCategory(string category)
         {
-            return Ok(new Habit { Id = Guid.NewGuid(), Name = "Estudar inglês" });
+            var response =  await _habitService.GetHabitByCategory(category);
+            return Ok(response);
         }
 
         //TODO - Atualizar Hábito
         [HttpPut("habit")]
-        public IActionResult Put()
+        public async Task<IActionResult> Put(HabitDTO upgradedHabit)
         {
-            return Ok(new Habit { Id = Guid.NewGuid(), Name = "Estudar inglês" });
+            var response = await _habitService.UpgradeHabit(upgradedHabit);
+            return Ok(response);
         }
 
         //TODO - Criar hábito
         [HttpPost("habit")]
-        public IActionResult Post()
+        public async Task<IActionResult> Post(HabitDTO newHabit)
         {
-            return Ok(new Habit { Id = Guid.NewGuid(), Name = "Estudar inglês" });
+            var response = await _habitService.AddHabit(newHabit);
+            return Ok(response);
         }
 
         //TODO - Deletar hábito
         [HttpDelete("habit")]
-        public IActionResult Delete()
+        public async Task<IActionResult> Delete(string id)
         {
-            return Ok(new Habit { Id = Guid.NewGuid(), Name = "Estudar inglês" });
+            var response = await _habitService.DeleteHabit(id);
+            return Ok(response);
         }
     }
 }
