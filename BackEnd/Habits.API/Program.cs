@@ -4,7 +4,6 @@ using Habits.Infra.Repositories;
 using Habits.Service.Interfaces;
 using Habits.Service.Services;
 using Microsoft.Azure.Cosmos;
-using System.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +16,14 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddTransient<IHabitService, HabitService>();
 builder.Services.AddScoped(typeof(IRepository<>), typeof(CosmosDbRepository<>));
 builder.Services.AddAutoMapper(typeof(HabitProfile));
+var conectionString = "AccountEndpoint=https://localhost:8081/;AccountKey=C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==";
+var databasename = "HelpHabits";
+
+builder.Services.AddScoped<ICosmosDBContext>(_ =>
+{
+    var cosmosClient = new CosmosClient(conectionString);
+    return new CosmosDbRepository(cosmosClient, database);
+});
 
 
 var app = builder.Build();
