@@ -4,6 +4,7 @@ using Habits.Domain.Models;
 using Habits.Domain.Responses;
 using Habits.Infra.Interfaces;
 using Habits.Service.Interfaces;
+using Serilog;
 
 namespace Habits.Service.Services
 {
@@ -22,12 +23,15 @@ namespace Habits.Service.Services
             try
             {
                 var teste = _mapper.Map<Habit>(newHabit);
+                Log.Debug($"Adicionar Request: {teste}");
                 var response = await _repository.AddAsync(teste);
+                Log.Debug($"Adicionar Response: {response}");
                 var result = _mapper.Map<HabitDTO>(response.Resource);
                 return new HabitResponse { Message = response.StatusCode.ToString(), response = new List<HabitDTO> { result } };
             }
             catch (Exception ex)
             {
+                Log.Debug($"Erro: {ex.Message}");
                 return new HabitResponse { Message = $"Erro: {ex.Message}" };
             }
             

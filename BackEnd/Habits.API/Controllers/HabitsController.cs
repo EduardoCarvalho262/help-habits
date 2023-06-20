@@ -2,6 +2,7 @@
 using Habits.Domain.Models;
 using Habits.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Serilog;
 
 namespace Habits.API.Controllers
 {
