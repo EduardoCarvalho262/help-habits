@@ -1,40 +1,80 @@
 ﻿using Habits.Domain.Models;
 using Habits.Infra.Interfaces;
 using Microsoft.Azure.Cosmos;
+using Microsoft.Azure.Cosmos.Linq;
+using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace Habits.Infra.Repositories
 {
-    public class HabitRepository<T> : IHabitsRepository<T> where T : Habit
+    public class HabitRepository : IHabitsRepository
     {
-        public Task<ItemResponse<T>> AddAsync(T entity)
+        private readonly Container _container;
+
+        public HabitRepository(ICosmosDBContext dBContext)
         {
-            throw new NotImplementedException();
+            _container = dBContext.GetEntityContainer<Habit>();
         }
 
-        public Task<ItemResponse<T>> DeleteAsync(string id, string category)
+        public async Task<ItemResponse<Habit>> AddAsync(Habit entity)
         {
-            throw new NotImplementedException();
+            return await _container.CreateItemAsync(entity);
         }
 
-        public Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate)
+        public async Task<ItemResponse<Habit>> DeleteAsync(string id, string category)
         {
-            throw new NotImplementedException();
+            return await _container.DeleteItemAsync<Habit>(id, new PartitionKey(category));
         }
 
-        public Task<IEnumerable<T>> GetAllAsync()
+        public async Task<IEnumerable<Habit>> FindAsync(Expression<Func<Habit, bool>> predicate)
         {
-            throw new NotImplementedException();
+            var query = _container.GetItemLinqQueryable<Habit>()
+                .Where(predicate)
+                .ToFeedIterator();
+
+            var results = new List<Habit>();
+
+            while (query.HasMoreResults)
+            {
+                var response = await query.ReadNextAsync();
+                results.AddRange(response);
+            }
+
+            return results;
         }
 
-        public Task<T> GetByIdAsync(string id)
+        public async Task<IList<Habit>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            var query = _container.GetItemQueryIterator<Habit>();
+            var results = new List<Habit>();
+
+            while (query.HasMoreResults)
+            {
+                var response = await query.ReadNextAsync();
+                results.AddRange(response.ToList());
+            }
+
+            return results;
         }
 
-        public Task<ItemResponse<T>> UpdateAsync(T entity)
+        public async Task<Habit> GetByIdAsync(string id, string partition)
         {
-            throw new NotImplementedException();
+            try
+            {
+                ItemResponse<Habit> response = await _container.ReadItemAsync<Habit>(id, new PartitionKey(partition));
+                return response.Resource;
+            }
+            catch (CosmosException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                throw;
+            }
+        }
+
+        public async Task<ItemResponse<Habit>> UpdateAsync(Habit entity)
+        {
+            return await _container.ReplaceItemAsync(entity, entity.Id.ToString(), new PartitionKey(entity.Category));
         }
     }
 }

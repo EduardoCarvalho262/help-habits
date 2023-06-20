@@ -2,7 +2,5 @@
 
 namespace Habits.Infra.Interfaces
 {
-    public interface IHabitsRepository<T> : IRepository<T> where T : Habit
-    {
-    }
+    public interface IHabitsRepository : IRepository<Habit>{ }
 }

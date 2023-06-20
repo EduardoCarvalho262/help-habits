@@ -13,16 +13,16 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddTransient<IHabitService, HabitService>();
-builder.Services.AddScoped(typeof(IRepository<>), typeof(CosmosDbRepository<>));
+builder.Services.AddScoped<IHabitService, HabitService>();
+builder.Services.AddScoped(typeof(IHabitsRepository), typeof(HabitRepository));
 builder.Services.AddAutoMapper(typeof(HabitProfile));
 var conectionString = "AccountEndpoint=https://localhost:8081/;AccountKey=C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==";
-var databasename = "HelpHabits";
+var database = "HelpHabits";
 
 builder.Services.AddScoped<ICosmosDBContext>(_ =>
 {
     var cosmosClient = new CosmosClient(conectionString);
-    return new CosmosDbRepository(cosmosClient, database);
+    return new CosmosDbRepository(database, cosmosClient);
 });
 
 

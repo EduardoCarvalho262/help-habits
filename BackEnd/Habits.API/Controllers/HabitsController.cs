@@ -26,10 +26,10 @@ namespace Habits.API.Controllers
             return Ok(response);
         }
 
-        [HttpGet("habit/{category}")]
-        public async Task<IActionResult> GetByCategory(string category)
+        [HttpGet("habit/{id}/{partition}")]
+        public async Task<IActionResult> GetByCategory(string id, string partition)
         {
-            var response =  await _habitService.GetHabitByCategory(category);
+            var response =  await _habitService.GetHabitByCategory(id,partition);
 
             if (response.Message.Contains("Erro"))
                 return BadRequest(response);

@@ -1,9 +1,6 @@
-﻿using Habits.Domain.Models;
+﻿using Habits.Domain.Attributes;
 using Habits.Infra.Interfaces;
 using Microsoft.Azure.Cosmos;
-using Microsoft.Azure.Cosmos.Linq;
-using System.Linq.Expressions;
-using System.Net;
 
 namespace Habits.Infra.Repositories
 {
@@ -25,12 +22,19 @@ namespace Habits.Infra.Repositories
                 : container;
         }
 
-        private Container RetrieveContainer<T>()
+        private Container RetrieveContainer<TEntity>() where TEntity : class
         {
             var name = RetrieveEntityContainerName(typeof(TEntity));
             var container = _cosmosDatabase.GetContainer(name);
-            _dbContainer.Add(typeof(T), container);
+            _dbContainer.Add(typeof(TEntity), container);
             return container;
+        }
+
+        private string RetrieveEntityContainerName(Type type)
+        {
+            var attr = (ContainerNameAttribute)type.GetCustomAttributes(false)
+                .Single(x => x.GetType() == typeof(ContainerNameAttribute));
+            return attr.Name;
         }
     }
 }

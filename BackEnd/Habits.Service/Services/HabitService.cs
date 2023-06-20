@@ -9,9 +9,9 @@ namespace Habits.Service.Services
 {
     public class HabitService : IHabitService
     {
-        private readonly IRepository<Habit> _repository;
+        private readonly IHabitsRepository _repository;
         private readonly IMapper _mapper;
-        public HabitService(IRepository<Habit> repository, IMapper mapper)
+        public HabitService(IHabitsRepository repository, IMapper mapper)
         {
             _repository = repository;
             _mapper = mapper;
@@ -60,11 +60,11 @@ namespace Habits.Service.Services
             }
         }
 
-        public async Task<HabitResponse> GetHabitByCategory(string category)
+        public async Task<HabitResponse> GetHabitByCategory(string id, string partiton)
         {
             try
             {
-                var response = await _repository.GetByIdAsync(category);
+                var response = await _repository.GetByIdAsync(id, partiton);
                 var result = new List<HabitDTO> { _mapper.Map<HabitDTO>(response) };
                 return new HabitResponse { Message = "Ok", response = result };
             }

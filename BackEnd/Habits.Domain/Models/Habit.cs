@@ -1,7 +1,9 @@
-﻿using Newtonsoft.Json;
+﻿using Habits.Domain.Attributes;
+using Newtonsoft.Json;
 
 namespace Habits.Domain.Models
 {
+    [ContainerNameAttribute("Habits")]
     public class Habit
     {
         [JsonProperty(PropertyName = "id")]
