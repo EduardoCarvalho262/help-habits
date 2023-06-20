@@ -26,7 +26,7 @@ namespace Habits.API.Controllers
             return Ok(response);
         }
 
-        [HttpGet("habit/{id}/{partition}")]
+        [HttpGet("habit/{id:guid}/{partition}")]
         public async Task<IActionResult> GetByCategory(string id, string partition)
         {
             var response =  await _habitService.GetHabitByCategory(id,partition);
@@ -59,7 +59,7 @@ namespace Habits.API.Controllers
             return Ok(response);
         }
 
-        [HttpDelete("habit/{id}/{category}")]
+        [HttpDelete("habit/{id:guid}/{category}")]
         public async Task<IActionResult> Delete(string id, string category)
         {
             var response = await _habitService.DeleteHabit(id, category);
