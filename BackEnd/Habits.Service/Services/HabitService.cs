@@ -5,6 +5,7 @@ using Habits.Domain.Responses;
 using Habits.Infra.Interfaces;
 using Habits.Service.Interfaces;
 using Serilog;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Habits.Service.Services
 {
@@ -41,11 +42,14 @@ namespace Habits.Service.Services
         {
             try
             {
+                Log.Debug($"Delete Request: Id:{id} - PartitionKey:{category}");
                 var response = await _repository.DeleteAsync(id,category);
+                Log.Debug($"Adicionar Response: {response}");
                 return new HabitResponse { Message = response.StatusCode.ToString() };
             }
             catch (Exception ex)
             {
+                Log.Debug($"Erro: {ex.Message}");
                 return new HabitResponse { Message = $"Erro: {ex.Message}" };
             }
         }
