@@ -24,9 +24,9 @@ namespace Habits.Service.Services
             try
             {
                 var teste = _mapper.Map<Habit>(newHabit);
-                Log.Debug($"Adicionar Request: {teste}");
+                Log.Debug($"Add Request: {teste}");
                 var response = await _repository.AddAsync(teste);
-                Log.Debug($"Adicionar Response: {response}");
+                Log.Debug($"Add Response: {response}");
                 var result = _mapper.Map<HabitDTO>(response.Resource);
                 return new HabitResponse { Message = response.StatusCode.ToString(), response = new List<HabitDTO> { result } };
             }
@@ -44,7 +44,7 @@ namespace Habits.Service.Services
             {
                 Log.Debug($"Delete Request: Id:{id} - PartitionKey:{category}");
                 var response = await _repository.DeleteAsync(id,category);
-                Log.Debug($"Adicionar Response: {response}");
+                Log.Debug($"Delete Response: {response}");
                 return new HabitResponse { Message = response.StatusCode.ToString() };
             }
             catch (Exception ex)
@@ -59,11 +59,13 @@ namespace Habits.Service.Services
             try
             {
                 var response = await _repository.GetAllAsync();
+                Log.Debug($"GetAll Response: {response}");
                 var result = _mapper.Map<List<HabitDTO>>(response.ToList());
                 return new HabitResponse { Message = "Ok", response = result};
             }
             catch (Exception ex)
             {
+                Log.Debug($"Erro: {ex.Message}");
                 return new HabitResponse { Message = $"Erro: {ex.Message}" };
             }
         }
@@ -72,12 +74,15 @@ namespace Habits.Service.Services
         {
             try
             {
+                Log.Debug($"GetById Request: Id:{id} - PartitionKey:{partiton}");
                 var response = await _repository.GetByIdAsync(id, partiton);
+                Log.Debug($"GetById Response: {response}");
                 var result = new List<HabitDTO> { _mapper.Map<HabitDTO>(response) };
                 return new HabitResponse { Message = "Ok", response = result };
             }
             catch (Exception ex)
             {
+                Log.Debug($"Erro: {ex.Message}");
                 return new HabitResponse { Message = $"Erro: {ex.Message}" };
             }
 
