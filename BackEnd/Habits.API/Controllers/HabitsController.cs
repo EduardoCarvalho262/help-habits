@@ -41,7 +41,7 @@ namespace Habits.API.Controllers
         [HttpPut("habit")]
         public async Task<IActionResult> Put(HabitDTO upgradedHabit)
         {
-            var response = await _habitService.UpgradeHabit(upgradedHabit);
+            var response = await _habitService.UpdateHabit(upgradedHabit);
 
             if (response.Message.Contains("Erro"))
                 return BadRequest(response);

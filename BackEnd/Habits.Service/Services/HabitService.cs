@@ -5,7 +5,6 @@ using Habits.Domain.Responses;
 using Habits.Infra.Interfaces;
 using Habits.Service.Interfaces;
 using Serilog;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Habits.Service.Services
 {
@@ -88,17 +87,20 @@ namespace Habits.Service.Services
 
         }
 
-        public async Task<HabitResponse> UpgradeHabit(HabitDTO upgradedHabit)
+        public async Task<HabitResponse> UpdateHabit(HabitDTO upgradedHabit)
         {
             try
             {
                 var teste = _mapper.Map<Habit>(upgradedHabit);
+                Log.Debug($"Upgrade Request: {teste}");
                 var response = await _repository.UpdateAsync(teste);
+                Log.Debug($"Add Response: {response}");
                 var result = _mapper.Map<HabitDTO>(response.Resource);
                 return new HabitResponse { Message = response.StatusCode.ToString(), response = new List<HabitDTO> { result } };
             }
             catch (Exception ex)
             {
+                Log.Debug($"Erro: {ex.Message}");
                 return new HabitResponse { Message = $"Erro: {ex.Message}" };
             }
 
