@@ -23,7 +23,7 @@ namespace Habits.Service.Services
             try
             {
                 var teste = _mapper.Map<Habit>(newHabit);
-                Log.Debug($"Add Request: {teste}");
+                Log.Debug($"ADD Request: {teste}");
                 var response = await _repository.AddAsync(teste);
                 Log.Debug($"Add Response: {response}");
                 var result = _mapper.Map<HabitDTO>(response.Resource);
@@ -75,8 +75,8 @@ namespace Habits.Service.Services
             {
                 Log.Debug($"GetById Request: Id:{id} - PartitionKey:{partiton}");
                 var response = await _repository.GetByIdAsync(id, partiton);
-                Log.Debug($"GetById Response: {response}");
                 var result = new List<HabitDTO> { _mapper.Map<HabitDTO>(response) };
+                Log.Debug($"GetById Response: {response}");
                 return new HabitResponse { Message = "Ok", response = result };
             }
             catch (Exception ex)

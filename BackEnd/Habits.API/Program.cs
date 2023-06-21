@@ -5,6 +5,7 @@ using Habits.Service.Interfaces;
 using Habits.Service.Services;
 using Microsoft.Azure.Cosmos;
 using Serilog;
+using Serilog.Events;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,8 +21,20 @@ builder.Services.AddAutoMapper(typeof(HabitProfile));
 builder.Host.UseSerilog();
 var conectionString = "AccountEndpoint=https://localhost:8081/;AccountKey=C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==";
 var database = "HelpHabits";
-builder.Host.UseSerilog((ctx, lc) => lc
-    .WriteTo.Console());
+
+builder.Host.UseSerilog((ctx, lc) =>
+{
+    if (ctx.HostingEnvironment.IsDevelopment())
+    {
+        lc.MinimumLevel.Debug();
+    }
+    else
+    {
+        lc.MinimumLevel.Information();
+    }
+    lc.WriteTo.Console();
+});
+
 
 builder.Services.AddScoped<ICosmosDBContext>(_ =>
 {
